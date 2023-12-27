@@ -1,4 +1,4 @@
-Este repositorio contiene pruebas automatizadas utilizando Selenium y Pytest para la aplicación [Nombre de tu Aplicación]. El conjunto de pruebas abarca el recorrido de un usuario en la aplicación, centrándose en varias funcionalidades.
+Este repositorio contiene pruebas automatizadas utilizando Selenium y Pytest para la aplicación . El conjunto de pruebas abarca el recorrido de un usuario en la aplicación, centrándose en varias funcionalidades.
 
 Prerrequisitos
 Python instalado
@@ -9,7 +9,7 @@ Instalación
 Clona el repositorio:
 bash
 Copy code
-git clone [url_del_repositorio]
+git clone
 Instala las dependencias:
 bash
 Copy code
@@ -21,13 +21,13 @@ bash
 Copy code
 pytest test_pruebas.py
 Detalles de las Pruebas
-El script de prueba (test_pruebas.py) realiza las siguientes acciones en la aplicación web de [Nombre de tu Aplicación]:
+El script de prueba (test_pruebas.py) realiza las siguientes acciones en la aplicación web de Urban routes:
 
 Abre la aplicación en https://2648f286-3f00-459f-801a-f1c5caeb9f8c.serverhub.tripleten-services.com/.
 Navega a través de varios pasos, como seleccionar ubicaciones, ingresar detalles e interactuar con botones.
 Valida el recorrido del usuario verificando elementos y comportamientos esperados.
 Entorno de Pruebas
-Sistema Operativo: [Tu SO]
+Sistema Operativo 
 Navegador: Google Chrome (versión del WebDriver X.X.X)
 Solución de Problemas
 Si las pruebas fallan, asegúrate de que:
