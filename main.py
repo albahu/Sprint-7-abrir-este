@@ -1,54 +1,127 @@
-import pytest
-import time
-import json
+import data
 from selenium import webdriver
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from time import sleep
+from selenium.webdriver.common.action_chains import ActionChains
 
-class TestPRUEBAS():
-  def setup_method(self, method):
-    self.driver = webdriver.Chrome()
-    self.vars = {}
-  
-  def teardown_method(self, method):
-    self.driver.quit()
-  
-  def test_pRUEBAS(self):
-    self.driver.get("https://9cbe8f83-6690-4868-8e78-331b3c9351c7.serverhub.tripleten-services.com/")
-    self.driver.set_window_size(1920, 1057)
-    self.driver.find_element(By.CSS_SELECTOR, ".dst-picker-row:nth-child(1) .label").click()
-    self.driver.find_element(By.ID, "from").send_keys("east 2nd street 601")
-    self.driver.find_element(By.ID, "to").click()
-    self.driver.find_element(By.ID, "to").send_keys("1300 1st st")
-    self.driver.find_element(By.CSS_SELECTOR, ".button:nth-child(3)").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".tcard:nth-child(5) > .tcard-icon > img").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".np-text").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".active .label").click()
-    self.driver.find_element(By.ID, "phone").send_keys("+1 123 123 12 12")
-    self.driver.find_element(By.CSS_SELECTOR, ".active .button").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".active:nth-child(2) > .close-button").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".pp-text").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".disabled > .pp-title").click()
-    self.driver.find_element(By.ID, "number").click()
-    self.driver.find_element(By.ID, "number").send_keys("1234 5678 9011")
-    self.driver.find_element(By.NAME, "code").click()
-    self.driver.find_element(By.NAME, "code").send_keys("111")
-    self.driver.find_element(By.CSS_SELECTOR, ".unusual > form").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".pp-buttons > .button:nth-child(1)").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".payment-picker .active > .close-button").click()
-    self.driver.find_element(By.CSS_SELECTOR, "div:nth-child(3) > .input-container").click()
-    self.driver.find_element(By.CSS_SELECTOR, "div:nth-child(3) > .input-container > .label").click()
-    self.driver.find_element(By.ID, "comment").send_keys("muestrAME EL CAMINO")
-    self.driver.find_element(By.CSS_SELECTOR, ".r:nth-child(1) .slider").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".r:nth-child(1) .counter-plus").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".r:nth-child(1) .counter-plus").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".smart-button-main").click()
-    self.driver.close()
-  
+
+# no modificar
+def retrieve_phone_code(driver) -> str:
+    """Este código devuelve un número de confirmación de teléfono y lo devuelve como un string.
+    Utilízalo cuando la aplicación espere el código de confirmación para pasarlo a tus pruebas.
+    El código de confirmación del teléfono solo se puede obtener después de haberlo solicitado en la aplicación."""
+
+    import json
+    import time
+    from selenium.common import WebDriverException
+    code = None
+    for i in range(10):
+        try:
+            logs = [log["message"] for log in driver.get_log('performance') if log.get("message")
+                    and 'api/v1/number?number' in log.get("message")]
+            for log in reversed(logs):
+                message_data = json.loads(log)["message"]
+                body = driver.execute_cdp_cmd('Network.getResponseBody',
+                                              {'requestId': message_data["params"]["requestId"]})
+                code = ''.join([x for x in body['body'] if x.isdigit()])
+        except WebDriverException:
+            time.sleep(1)
+            continue
+        if not code:
+            raise Exception("No se encontró el código de confirmación del teléfono.\n"
+                            "Utiliza 'retrieve_phone_code' solo después de haber solicitado el código en tu aplicación.")
+        return code
+
+
+class UrbanRoutesPage:
+    from_field = (By.ID, 'from')
+    to_field = (By.ID, 'to')
+
+    def __init__(self, driver):
+        self.driver = driver
+
+    def set_from(self, from_address):
+        self.driver.find_element(*self.from_field).send_keys(from_address)
+
+    def set_to(self, to_address):
+        self.driver.find_element(*self.to_field).send_keys(to_address)
+
+    def get_from(self):
+        return self.driver.find_element(*self.from_field).get_property('value')
+
+    def get_to(self):
+        return self.driver.find_element(*self.to_field).get_property('value')
+
+
+
+class TestUrbanRoutes:
+
+    driver = None
+
+    @classmethod
+    def setup_class(cls):
+        # no lo modifiques, ya que necesitamos un registro adicional habilitado para recuperar el código de confirmación del teléfono
+        from selenium.webdriver import DesiredCapabilities
+        capabilities = DesiredCapabilities.CHROME
+        capabilities["goog:loggingPrefs"] = {'performance': 'ALL'}
+        cls.driver = webdriver.Chrome()
+        cls.driver.implicitly_wait(10)
+
+
+    def test_configure_address(self):
+        self.UrbanRoutesPage.configure_address('123 Main Street')
+        # Se verifica configurar dirección de destino
+
+    def test_select_comfort_rate(self):
+        self.UrbanRoutesPage.select_comfort_rate()
+        # Se agrega seleccionar tarifa COMFORT
+
+    def test_fill_phone_number(self):
+        self.UrbanRoutesPage.fill_phone_number('1234567890')
+        # Se verifica rellenar el número telefónico
+
+    def test_add_credit_card(self):
+        self.UrbanRoutesPage.add_credit_card('1234 5678 9012 3456', '12/25', '123')
+        # Se verifica agregar tarjeta de crédito
+
+    def test_write_message(self):
+        self.UrbanRoutesPage.write_message('This is a test message.')
+        # Se verifica mensaje de prueba
+
+    def test_order_blanket_and_tissues(self):
+        self.UrbanRoutesPage.order_blanket_and_tissues()
+        # Se pide una manta y pañuelos
+
+    def test_order_ice_cream(self):
+        self.UrbanRoutesPage.order_ice_cream(2)
+        # Se verifica para pedir un helado
+
+    def test_open_taxi_modal(self):
+        self.UrbanRoutesPage.open_taxi_modal()
+        # Se verifican para buscar un taxi
+
+    def test_wait_for_driver_info_modal(self):
+        self.UrbanRoutesPage.wait_for_driver_info_modal()
+        # Se verifica información
+
+    def test_set_route(self):
+        self.driver.get(data.urban_routes_url)
+        routes_page = UrbanRoutesPage(self.driver)
+        address_from = data.address_from
+        address_to = data.address_to
+        routes_page.set_route(address_from, address_to)
+        assert routes_page.get_from() == address_from
+        assert routes_page.get_to() == address_to
+
+    if __name__ == '__main__':
+        unittest.main()
+
+    @classmethod
+    def teardown_class(cls):
+        cls.driver.quit()
 
   
 
