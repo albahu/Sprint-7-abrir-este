@@ -1,66 +1,52 @@
-# urban_routes_page.py
-import data
+import pytest
+import time
+import json
+from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-class UrbanRoutesPage:
-
-    def __init__(self, driver):
-        self.driver = driver
-        self.driver.get('https://c7424f10-9c9e-4919-94c0-b13a2f937964.serverhub.tripleten-services.com?lng=es')
-
-    def set_address(self, address):
-        address_input = self.driver.find_element(By.ID, 'address-input')
-        address_input.clear()
-        address_input.send_keys(address)
-
-    def select_comfort_tariff(self):
-        comfort_tariff_button = self.driver.find_element(By.ID, 'comfort-tariff-button')
-        comfort_tariff_button.click()
-
-    def fill_phone_number(self, phone_number):
-        phone_input = self.driver.find_element(By.ID, 'phone-input')
-        phone_input.clear()
-        phone_input.send_keys(phone_number)
-
-    def add_credit_card(self, card_number, card_code):
-        add_card_button = self.driver.find_element(By.ID, 'add-card-button')
-        add_card_button.click()
-
-        card_number_input = self.driver.find_element(By.ID, 'card-number-input')
-        card_number_input.clear()
-        card_number_input.send_keys(card_number)
-
-        card_code_input = self.driver.find_element(By.ID, 'code')
-        card_code_input.clear()
-        card_code_input.send_keys(card_code)
-        card_code_input.send_keys(Keys.TAB)  # Cambiar el enfoque para activar el botón de enlace
-
-    def write_message(self, message):
-        message_input = self.driver.find_element(By.ID, 'message-input')
-        message_input.clear()
-        message_input.send_keys(message)
-
-    def request_blanket_and_tissues(self):
-        blanket_button = self.driver.find_element(By.ID, 'blanket-button')
-        blanket_button.click()
-
-        tissues_button = self.driver.find_element(By.ID, 'tissues-button')
-        tissues_button.click()
-
-    def request_ice_creams(self):
-        ice_creams_button = self.driver.find_element(By.ID, 'ice-creams-button')
-        ice_creams_button.click()
-
-    def is_search_modal_displayed(self):
-        try:
-            WebDriverWait(self.driver, 10).until(
-                EC.visibility_of_element_located((By.ID, 'search-modal'))
-            )
-            return True
-        except:
-            return False
-
+class TestPruebas():
+  def setup_method(self, method):
+    self.driver = webdriver.Chrome()
+    self.vars = {}
+  
+  def teardown_method(self, method):
+    self.driver.quit()
+  
+  def test_pruebas(self):
+    self.driver.get("https://2648f286-3f00-459f-801a-f1c5caeb9f8c.serverhub.tripleten-services.com/")
+    self.driver.set_window_size(1920, 1057)
+    self.driver.find_element(By.CSS_SELECTOR, ".dst-picker-row:nth-child(1) .label").click()
+    self.driver.find_element(By.ID, "from").send_keys("east 2nd street 601")
+    self.driver.find_element(By.CSS_SELECTOR, ".error > .label").click()
+    self.driver.find_element(By.ID, "to").send_keys("1300 1st st")
+    self.driver.find_element(By.CSS_SELECTOR, ".button:nth-child(3)").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".active > .tcard-icon > img").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".np-text").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".active .label").click()
+    self.driver.find_element(By.ID, "phone").send_keys("+1 123 123 12 12")
+    self.driver.find_element(By.CSS_SELECTOR, ".active .button").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".active:nth-child(2) > .close-button").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".pp-text").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".disabled > .pp-title").click()
+    self.driver.find_element(By.ID, "number").click()
+    self.driver.find_element(By.ID, "number").send_keys("1234 5678 9100")
+    self.driver.find_element(By.NAME, "code").click()
+    self.driver.find_element(By.NAME, "code").send_keys("111")
+    self.driver.find_element(By.CSS_SELECTOR, ".pp-buttons").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".pp-buttons > .button:nth-child(1)").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".payment-picker .active > .close-button").click()
+    self.driver.find_element(By.CSS_SELECTOR, "div:nth-child(3) > .input-container > .label").click()
+    self.driver.find_element(By.ID, "comment").send_keys("muestrame el camino")
+    self.driver.find_element(By.CSS_SELECTOR, ".r:nth-child(1) .slider").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".r:nth-child(1) .slider").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".counter > .disabled:nth-child(3)").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".r:nth-child(1) .counter-minus").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".r:nth-child(1) .counter-plus").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".smart-button-main").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".order-btn-group:nth-child(2) > .order-button").click()
 
