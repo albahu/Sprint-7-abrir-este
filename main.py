@@ -72,7 +72,7 @@ class TestUrbanRoutes:
 
 
     def test_configure_address(self):
-        self.UrbanRoutesPage.configure_address('123 Main Street')
+        self.UrbanRoutesPage.configure_address(data.address_from)
         # Se verifica configurar dirección de destino
 
     def test_select_comfort_rate(self):
@@ -80,15 +80,15 @@ class TestUrbanRoutes:
         # Se agrega seleccionar tarifa COMFORT
 
     def test_fill_phone_number(self):
-        self.UrbanRoutesPage.fill_phone_number('1234567890')
+        self.UrbanRoutesPage.fill_phone_number('+1 123 123 12 12')
         # Se verifica rellenar el número telefónico
 
     def test_add_credit_card(self):
-        self.UrbanRoutesPage.add_credit_card('1234 5678 9012 3456', '12/25', '123')
+        self.UrbanRoutesPage.add_credit_card('1234 5678 9011', '111')
         # Se verifica agregar tarjeta de crédito
 
     def test_write_message(self):
-        self.UrbanRoutesPage.write_message('This is a test message.')
+        self.UrbanRoutesPage.write_message('Muestrame el camino al museo')
         # Se verifica mensaje de prueba
 
     def test_order_blanket_and_tissues(self):
