@@ -73,38 +73,49 @@ class TestUrbanRoutes:
 
     def test_configure_address(self):
         self.UrbanRoutesPage.configure_address(data.address_from)
-        # Se verifica configurar dirección de destino
+        assert configured_address == address_to_configure   
+    # Se verifica configurar dirección de destino
 
     def test_select_comfort_rate(self):
         self.UrbanRoutesPage.select_comfort_rate()
+        assert selected_comfort_rate == "COMFORT"
         # Se agrega seleccionar tarifa COMFORT
 
     def test_fill_phone_number(self):
         self.UrbanRoutesPage.fill_phone_number('+1 123 123 12 12')
+         assert actual_phone_number == phone_number_to_fill
+        
         # Se verifica rellenar el número telefónico
 
     def test_add_credit_card(self):
         self.UrbanRoutesPage.add_credit_card('1234 5678 9011', '111')
+        assert added_credit_card == (credit_card_number, cvv)
         # Se verifica agregar tarjeta de crédito
 
     def test_write_message(self):
         self.UrbanRoutesPage.write_message('Muestrame el camino al museo')
+        assert written_message == message_to_write
         # Se verifica mensaje de prueba
 
     def test_order_blanket_and_tissues(self):
         self.UrbanRoutesPage.order_blanket_and_tissues()
+        assert "Orden completada" in order_confirmation_message
         # Se pide una manta y pañuelos
 
     def test_order_ice_cream(self):
         self.UrbanRoutesPage.order_ice_cream(2)
+         assert f"Orden completada: {quantity_to_order} helados" in order_confirmation_message, f"La orden de {quantity_to_order} helados no se completó correctamente."
         # Se verifica para pedir un helado
 
     def test_open_taxi_modal(self):
         self.UrbanRoutesPage.open_taxi_modal()
+        assert is_taxi_modal_open
         # Se verifican para buscar un taxi
 
     def test_wait_for_driver_info_modal(self):
         self.UrbanRoutesPage.wait_for_driver_info_modal()
+         assert is_driver_info_modal_present
+        
         # Se verifica información
 
     def test_set_route(self):
