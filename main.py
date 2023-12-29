@@ -37,23 +37,88 @@ def retrieve_phone_code(driver) -> str:
 
 
 class UrbanRoutesPage:
-    from_field = (By.ID, 'from')
-    to_field = (By.ID, 'to')
+   
 
     def __init__(self, driver):
         self.driver = driver
 
-    def set_from(self, from_address):
-        self.driver.find_element(*self.from_field).send_keys(from_address)
+        def test_open_page(self):
+        self.driver.get("https://4c605270-205d-4bdc-9518-b8a2b6a4f062.serverhub.tripleten-services.com?lng=es")
 
-    def set_to(self, to_address):
-        self.driver.find_element(*self.to_field).send_keys(to_address)
+    def test_set_window_size(self):
+        self.driver.set_window_size(1920, 1057)
 
-    def get_from(self):
-        return self.driver.find_element(*self.from_field).get_property('value')
+    def click_from(self,):
+        self.driver.find_element(By.ID, "from").click()
 
-    def get_to(self):
-        return self.driver.find_element(*self.to_field).get_property('value')
+    def set_from(self):
+        self.driver.find_element(By.ID, "from").send_keys("east 2nd street 601")
+
+    def click_to(self):
+        self.driver.find_element(By.ID, "to").click()
+
+    def set_to(self):
+        self.driver.find_element(By.ID, "to").send_keys("1300 1st st")
+
+    def click_personal(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".mode:nth-child(3)").click()
+
+    def click_button_taxi(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".button:nth-child(3)").click()
+
+    def click_comfort(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".tcard:nth-child(5) > .tcard-icon > img").click()
+
+    def click_phone_button(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".np-text").click()
+
+    def click_phone_number(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".active .label").click()
+
+    def phone_input(self):
+        self.driver.find_element(By.ID, "phone").send_keys("+1 123 123 12 12")
+
+    def click_next(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".active .button").click()
+
+    def click_close(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".active:nth-child(2) > .close-button").click()
+
+    def click_payment_button(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".pp-text").click()
+
+    def click_card_number(self):
+        self.driver.find_element(By.ID, "number").click()
+
+    def type_card_number(self):
+        self.driver.find_element(By.ID, "number").send_keys("1234 5678 9100")
+
+    def click_code_number(self):
+        self.driver.find_element(By.NAME, "code").click()
+
+    def type_code_number(self):
+        self.driver.find_element(By.NAME, "code").send_keys("111")
+
+    def click_add_button(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".payment-picker .active > .close-button").click()
+
+    def click_comment_field(self):
+        self.driver.find_element(By.CSS_SELECTOR, "div:nth-child(3) > .input-container > .label").click()
+
+    def type_comment_field(self):
+        self.driver.find_element(By.ID, "comment").send_keys("muestrame el camino al museo")
+
+    def click_tissues(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".r:nth-child(1) .slider").click()
+
+    def click_ice_cream(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".r:nth-child(1) .counter-plus").click()
+
+    def click_ice_cream_2(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".r:nth-child(1) .counter-plus").click()
+
+    def click_call_taxi_button(self):
+        self.driver.find_element(By.CSS_SELECTOR, ".smart-button-main").click()
 
 
 
@@ -69,6 +134,16 @@ class TestUrbanRoutes:
         capabilities["goog:loggingPrefs"] = {'performance': 'ALL'}
         cls.driver = webdriver.Chrome()
         cls.driver.implicitly_wait(10)
+
+    
+    def test_set_route(self):
+        self.driver.get(data.urban_routes_url)
+        routes_page = UrbanRoutesPage(self.driver)
+        address_from = data.address_from
+        address_to = data.address_to
+        routes_page.set_route(address_from, address_to)
+        assert routes_page.get_from() == address_from
+        assert routes_page.get_to() == address_to
 
 
     def test_configure_address(self):
@@ -118,14 +193,6 @@ class TestUrbanRoutes:
         
         # Se verifica información
 
-    def test_set_route(self):
-        self.driver.get(data.urban_routes_url)
-        routes_page = UrbanRoutesPage(self.driver)
-        address_from = data.address_from
-        address_to = data.address_to
-        routes_page.set_route(address_from, address_to)
-        assert routes_page.get_from() == address_from
-        assert routes_page.get_to() == address_to
 
     if __name__ == '__main__':
         unittest.main()
