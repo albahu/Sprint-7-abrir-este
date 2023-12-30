@@ -42,10 +42,10 @@ class UrbanRoutesPage:
     def __init__(self, driver):
         self.driver = driver
 
-        def test_open_page(self):
+    def open_page(self):
         self.driver.get("https://4c605270-205d-4bdc-9518-b8a2b6a4f062.serverhub.tripleten-services.com?lng=es")
 
-    def test_set_window_size(self):
+    def set_window_size(self):
         self.driver.set_window_size(1920, 1057)
 
     def click_from(self,):
