@@ -23,7 +23,7 @@ pytest test_pruebas.py
 Detalles de las Pruebas
 El script de prueba (test_pruebas.py) realiza las siguientes acciones en la aplicación web de Urban routes:
 
-Abre la aplicación en https://2648f286-3f00-459f-801a-f1c5caeb9f8c.serverhub.tripleten-services.com/.
+Abre la aplicación en https://f8b519be-157b-4192-b008-7cd120a03f4c.serverhub.tripleten-services.com?lng=es/.
 Navega a través de varios pasos, como seleccionar ubicaciones, ingresar detalles e interactuar con botones.
 Valida el recorrido del usuario verificando elementos y comportamientos esperados.
 Entorno de Pruebas
